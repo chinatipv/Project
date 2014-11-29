@@ -990,40 +990,48 @@ public class Payment extends JFrame {
 		JScrollPane scrollPane_1 = new JScrollPane(panel2);
 		panel2.setLayout(null);
 		
-		JLabel label_4 = new JLabel("receivejhhh");
-		label_4.setHorizontalAlignment(SwingConstants.TRAILING);
-		label_4.setBounds(90, 357, 175, 14);
-		panel2.add(label_4);
+		JLabel lblAaaa = new JLabel("aaaa");
+		lblAaaa.setBounds(68, 327, 68, 14);
+		panel2.add(lblAaaa);
+		
+		JLabel lblTotaljhhh = new JLabel("totaljhhh");
+		lblTotaljhhh.setHorizontalAlignment(SwingConstants.TRAILING);
+		lblTotaljhhh.setBounds(90, 371, 175, 14);
+		panel2.add(lblTotaljhhh);
 		
 		JLabel label_5 = new JLabel("jhhhhhh");
 		label_5.setHorizontalAlignment(SwingConstants.TRAILING);
-		label_5.setBounds(90, 395, 175, 14);
+		label_5.setBounds(90, 415, 175, 14);
 		panel2.add(label_5);
 		
 		JLabel lblReceivejhhh = new JLabel("receivejhhh");
 		lblReceivejhhh.setHorizontalAlignment(SwingConstants.TRAILING);
-		lblReceivejhhh.setBounds(90, 330, 175, 14);
+		lblReceivejhhh.setBounds(90, 385, 175, 14);
 		panel2.add(lblReceivejhhh);
 		
-		JLabel lblJh = new JLabel("totaljhh");
+		JLabel lblJh = new JLabel("vat7jhh");
 		lblJh.setHorizontalAlignment(SwingConstants.TRAILING);
-		lblJh.setBounds(90, 316, 175, 14);
+		lblJh.setBounds(90, 461, 175, 14);
 		panel2.add(lblJh);
 		
 		JLabel label_3 = new JLabel("Baht");
-		label_3.setBounds(295, 357, 22, 14);
+		label_3.setFont(new Font("Tahoma", Font.PLAIN, 11));
+		label_3.setBounds(292, 415, 36, 14);
 		panel2.add(label_3);
 		
 		JLabel label_2 = new JLabel("Baht");
-		label_2.setBounds(295, 395, 22, 14);
+		label_2.setFont(new Font("Tahoma", Font.PLAIN, 11));
+		label_2.setBounds(292, 461, 36, 14);
 		panel2.add(label_2);
 		
 		JLabel label_1 = new JLabel("Baht");
-		label_1.setBounds(295, 330, 22, 14);
+		label_1.setFont(new Font("Tahoma", Font.PLAIN, 11));
+		label_1.setBounds(292, 385, 36, 14);
 		panel2.add(label_1);
 		
 		JLabel lblBaht = new JLabel("Baht");
-		lblBaht.setBounds(295, 316, 22, 14);
+		lblBaht.setFont(new Font("Tahoma", Font.PLAIN, 11));
+		lblBaht.setBounds(292, 371, 36, 14);
 		panel2.add(lblBaht);
 		
 		JLabel label = new JLabel("");
@@ -1043,11 +1051,11 @@ public class Payment extends JFrame {
 				sum = 0;
 		else sum = total - receiveBill;
 		JTextPane txtpnYYY = new JTextPane();
-		txtpnYYY.setText("\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n    -------------------------------------------------------------------------------   \r\n\r\n        :: Movie Ticket ::\r\n                   \r\n\t Name :\r\n\t Theatre :      (\u0E1A\u0E2D\u0E01 Type)\r\n\t Amount :\r\n\t Seat Class    x1\r\n\t\r\n\r\n\r\n    -------------------------------------------------------------------------------  \r\n\r\n\r\n        Total                                                                       \r\n        Receive                                                                \r\n\r\n        Return                                                                \r\n\r\n\r\n        VAT 7%                                                              \r\n\r\n4y \r\n5y\r\n6\r\n7y\r\n8y\r\n\r\n");
+		txtpnYYY.setText("\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n    -------------------------------------------------------------------------------   \r\n\r\n        :: Movie Ticket ::\r\n                   \r\n\t Name :\r\n\t Theatre :      (\u0E1A\u0E2D\u0E01 Type)\r\n\t Amount :\r\n\t Seat Class    x1\r\n\t\r\n\r\n\r\n    -------------------------------------------------------------------------------  \r\n\r\n\r\n        Total                                                                       \r\n        Receive                                                                \r\n\r\n        Return                                                                \r\n\r\n\r\n        VAT 7%                                                              \r\n\r\n");
 		txtpnYYY.setMaximumSize(new Dimension(270,1000));
 		txtpnYYY.setMinimumSize(new Dimension(270,1000));
 		txtpnYYY.setPreferredSize(new Dimension(270,1000));
-		txtpnYYY.setBounds(10, 23, 353,650);
+		txtpnYYY.setBounds(10, 33, 353,480);
 		panel2.add(txtpnYYY);
 		
 		scrollPane_1.setPreferredSize(new Dimension(300, 300));
