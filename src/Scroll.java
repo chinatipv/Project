@@ -1,4 +1,3 @@
-package old;
 import java.awt.*;
 import javax.swing.*;
 public class Scroll

@@ -1,6 +1,6 @@
 
-//elab-source: Time.java
 
+//elab-source: Time.java
 public class Time {
 	private int hour;
 	private int minute;

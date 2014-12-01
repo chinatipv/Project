@@ -10,7 +10,9 @@ public class Person {
 	private String phonenumber;
 	private int age;
 
-
+	Person(){
+		
+	}
 	Person(String id, String name,String lastname,String gender,Day birthday,String NationID,String phonenumber,Day currentday){
 		this.ID=id;
 		this.name=name;

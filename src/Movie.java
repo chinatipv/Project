@@ -1,18 +1,14 @@
 import java.awt.Image;
-import java.util.Arrays;
 
 import javax.swing.ImageIcon;
-/*
- * Svae image
- * time
- */
 
-public class Movie implements Comparable {
+
+public class Movie {
 	private String title;
 	private double rating;
 	private String summery;
 	private int rate;
-	private ImageIcon[] image;
+	private Image image;
 	private String detail;
 	private String genres;
 	private Day releaseDay;
@@ -44,13 +40,12 @@ public class Movie implements Comparable {
 	public void setRate(int rate) {
 		this.rate = rate;
 	}
-	public ImageIcon[] getImageIcon() {
+	public Image getImage() {
 		return image;
 	}
-	public void setImageIcon(ImageIcon[] image) {
+	public void setImage(Image image) {
 		this.image = image;
 	}
-
 	public String getDetail() {
 		return detail;
 	}
@@ -93,11 +88,14 @@ public class Movie implements Comparable {
 	public void setDulation(Time dulation) {
 		this.dulation = dulation;
 	}
+	public ImageIcon getImageIcon(){
+		return new ImageIcon(image);
+	}
 	public Movie(){
 		
 	}
 	public Movie(String title, double rating, String summery, int rate,
-			ImageIcon[] image, String detail, String genres, Day releaseDay,
+			Image image, String detail, String genres, Day releaseDay,
 			String director, String synopis, String language, Time dulation) {
 		super();
 		this.title = title;
@@ -112,23 +110,6 @@ public class Movie implements Comparable {
 		this.synopis = synopis;
 		this.language = language;
 		this.dulation = dulation;
-	}
-	
-
-	@Override
-	public String toString() {
-		return title + "#" + rating + "#"
-				+ summery + "#" + rate + ", image="
-				+ Arrays.toString(image) + "#" + detail + "#"
-				+ genres + "#" + releaseDay + "#"
-				+ Director + "#" + synopis + "#" + language
-				+ "#" + dulation;
-	}
-	@Override
-	public int compareTo(Object o) {
-		// TODO Auto-generated method stub
-		return title.compareTo(((Movie)o).getTitle());
-
 	}
 	
 }
