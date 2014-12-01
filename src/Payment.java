@@ -39,6 +39,7 @@ import java.awt.event.MouseMotionAdapter;
 import java.awt.image.ImageObserver;
 import java.awt.image.ImageProducer;
 import java.net.URL;
+import java.util.ArrayList;
 
 import javax.swing.JScrollPane;
 import javax.swing.JScrollBar;
@@ -54,16 +55,18 @@ import javax.swing.ScrollPaneConstants;
 
 import java.awt.Panel;
 import java.awt.FlowLayout;
+
 import javax.swing.JTextArea;
+
 import java.awt.Component;
 
 
 
 
-public class Payment extends JFrame {
-	private Day day;
+public class Payment extends JFrame implements Runnable{
+	private Day day;ArrayList<Seat> bookListl;
 	private Time time;
-	private JPanel contentPane;
+	private JPanel contentPane,panel;
 	private JTextField textField;
 	private JTextField txc10;
 	private JTextField txb1000;
@@ -74,23 +77,157 @@ public class Payment extends JFrame {
 	private JTextField txc5;
 	private JTextField txc2;
 	private JTextField txc1;
-	private JComboBox pop_s,pop_m,pop_l,nachos,popcoke_s,popcoke_m,popcoke_l;
+	private JComboBox pop_s,pop_m,pop_l,nachos,popcoke_s,popcoke_m,popcoke_l,payBy;
 	private JTextField receive;
-	private JButton finish, okButton;
-	private int total,pay,receiveBill; 
-	JTabbedPane tabbedPane;
-	private Movie movie;
+	private JButton finishButton, okButton;
+	private int total,original,pay,numSeats,sumSeatBooking;
+	private double roundDou; 
+	private JTabbedPane tabbedPane;
+	private Round round;
+	private JLabel BillReturn,BillTotal,BillReceive,BillVat,theatertx,BillSeatNormaltx,membertx,BillPopcokeLtx,
+	BillPopcokeMtx,BillPopcokeStx,BillNachostx,BillPopLtx,BillPopMtx,BillPopStx,amounttx,movietx,BillSeatHoneymoontx,BillseatOperatx;
+	private JLabel ticketLanguage,BillNumber;
+	private static int billID,ticketID;
 	/**
 	 * Launch the application.
 	 */
-	public void cancelButton(){
+	private void updateTicket(){
+		for(int i =0; i<bookListl.size();i++){
+			ticketID++;
+			JPanel panel_1 = new JPanel();
+			panel_1.setBounds(0, 0, 270, 337);
+			panel.setMaximumSize(new Dimension(270,337*bookListl.size()*2));
+			panel.setMinimumSize(new Dimension(270,337*bookListl.size()));
+			panel.setPreferredSize(new Dimension(270,337*bookListl.size()));
+			panel_1.setLayout(null);
+			panel.add(panel_1);
+
+			JLabel ticketNumber = new JLabel(String.format("Ticket number : %04d",ticketID));
+			ticketNumber.setHorizontalAlignment(SwingConstants.TRAILING);
+			ticketNumber.setFont(new Font("Tahoma", Font.PLAIN, 11));
+			ticketNumber.setBounds(10, 282, 250, 14);
+			panel_1.add(ticketNumber);
+
+			ticketLanguage = new JLabel(round.getMovie().getLanguage());
+			ticketLanguage.setFont(new Font("Tahoma", Font.BOLD, 13));
+			ticketLanguage.setBounds(91, 88, 77, 20);
+			panel_1.add(ticketLanguage);
+
+			JLabel ticketSeat = new JLabel(bookListl.get(i).getID());
+			ticketSeat.setFont(new Font("Tahoma", Font.BOLD, 17));
+			ticketSeat.setBounds(65, 193, 88, 14);
+			panel_1.add(ticketSeat);
+
+			JLabel lblSeat = new JLabel("Seat :");
+			lblSeat.setFont(new Font("Tahoma", Font.BOLD, 17));
+			lblSeat.setBounds(10, 190, 60, 20);
+			panel_1.add(lblSeat);
+
+			JLabel ticketDate = new JLabel(round.getCurrentDay().toString());
+			ticketDate.setFont(new Font("Tahoma", Font.BOLD, 13));
+			ticketDate.setBounds(51, 165, 88, 14);
+			panel_1.add(ticketDate);
+
+			JLabel lblDate = new JLabel("Date :");
+			lblDate.setFont(new Font("Tahoma", Font.BOLD, 13));
+			lblDate.setBounds(10, 165, 45, 14);
+			panel_1.add(lblDate);
+
+			JLabel ticketTime = new JLabel(round.getStart().toString());
+			ticketTime.setFont(new Font("Tahoma", Font.BOLD, 13));
+			ticketTime.setBounds(51, 140, 60, 14);
+			panel_1.add(ticketTime);
+
+			JLabel lblTime = new JLabel("Time :");
+			lblTime.setFont(new Font("Tahoma", Font.BOLD, 13));
+			lblTime.setBounds(10, 140, 45, 14);
+			panel_1.add(lblTime);
+
+			JLabel ticketRate = new JLabel(round.getMovie().getRate()+"");
+			ticketRate.setFont(new Font("Tahoma", Font.BOLD, 13));
+			ticketRate.setBounds(200, 115, 38, 14);
+			panel_1.add(ticketRate);
+
+			JLabel lblRate = new JLabel("Rate :");
+			lblRate.setFont(new Font("Tahoma", Font.BOLD, 13));
+			lblRate.setBounds(149, 115, 45, 14);
+			panel_1.add(lblRate);
+
+			JLabel ticketTheatre = new JLabel(round.getTheater().getID());
+			ticketTheatre.setFont(new Font("Tahoma", Font.BOLD, 13));
+			ticketTheatre.setBounds(72, 115, 67, 14);
+			panel_1.add(ticketTheatre);
+
+			JLabel lblTheatre = new JLabel("Theatre :");
+			lblTheatre.setFont(new Font("Tahoma", Font.BOLD, 13));
+			lblTheatre.setBounds(10, 115, 60, 14);
+			panel_1.add(lblTheatre);
+
+			JLabel lblLanguage = new JLabel("Language :");
+			lblLanguage.setFont(new Font("Tahoma", Font.BOLD, 13));
+			lblLanguage.setBounds(10, 88, 77, 20);
+			panel_1.add(lblLanguage);
+			JLabel ticketMovieName = new JLabel(round.getMovie().getTitle());
+			ticketMovieName.setFont(new Font("Tahoma", Font.BOLD, 13));
+			ticketMovieName.setBounds(10, 65, 246, 14);
+			panel_1.add(ticketMovieName);
+
+			JLabel ticketBillnumber = new JLabel(String.format("Bill number : %04d",billID));
+			ticketBillnumber.setHorizontalAlignment(SwingConstants.TRAILING);
+			ticketBillnumber.setFont(new Font("Tahoma", Font.PLAIN, 11));
+			ticketBillnumber.setBounds(10, 302, 250, 14);
+			panel_1.add(ticketBillnumber);
+
+			JLabel lblNewLabel_3 = new JLabel("");
+			lblNewLabel_3.setIcon(new ImageIcon(Payment.class.getResource("/images/Untitled-2.jpg")));
+			lblNewLabel_3.setBounds(0, 0, 270, 319);
+			panel_1.add(lblNewLabel_3);
+		}
+	}
+
+	private void updateTab(){
+		BillNumber.setText(billID+"");
+		BillTotal.setText(total+"");	
+		BillVat.setText(String.format("%.2f",total*0.07));
+		if (payBy.getSelectedItem().equals("Cash")){
+			BillReturn.setText(pay-total+"");
+			BillReceive.setText(pay+"");
+		}
+		else{
+			BillReturn.setText(total-total+"");
+			BillReceive.setText(total+"");
+		}
+		theatertx.setText(round.getTheater().getID()+" "+round.getTheater().getType() );
+		//		membertx = new JLabel("Member ID :");
+		//		
+		BillPopcokeLtx.setText(Integer.parseInt(popcoke_l.getSelectedItem().toString())+"");
+		BillPopcokeMtx.setText(Integer.parseInt(popcoke_m.getSelectedItem().toString())+"");
+		BillPopcokeStx.setText(Integer.parseInt(popcoke_s.getSelectedItem().toString())+"");
+		BillNachostx.setText(Integer.parseInt(nachos.getSelectedItem().toString())+"");
+		BillPopLtx.setText(Integer.parseInt(pop_l.getSelectedItem().toString())+"");
+		BillPopMtx.setText(Integer.parseInt(pop_m.getSelectedItem().toString())+"");
+		BillPopStx.setText(Integer.parseInt(pop_s.getSelectedItem().toString())+"");
+		int[] amount= new int[round.getSeatInEachType().size()];
+		for(int i = 0;i< bookListl.size();i++){
+			amount[bookListl.get(i).getPosition()[0]]++;
+		}
+
+		BillSeatNormaltx.setText(amount[0]+"");
+		BillSeatHoneymoontx.setText(amount[1]+"");
+		BillseatOperatx.setText(amount[2]+"");
+		amounttx.setText(bookListl.size()+"");
+		movietx.setText(round.getMovie().getTitle());
+
+	}
+
+	private void cancelButton(){
 		clearReceive();
 		clearPromotion();
 		receive.setText("0");
 		promotion ();
 
 	}
-	public void clearPromotion(){
+	private void clearPromotion(){
 		pop_s.setSelectedIndex(0);
 		pop_m.setSelectedIndex(0);
 		pop_l.setSelectedIndex(0);
@@ -101,7 +238,7 @@ public class Payment extends JFrame {
 	}
 
 	private void clearReceive(){
-		finish.setVisible(false);
+		finishButton.setVisible(false);
 		txb1000.setText( 0+ "");
 		txb500.setText( 0+ "");
 		txb100.setText( 0+ "");
@@ -120,7 +257,7 @@ public class Payment extends JFrame {
 		h.showMessageDialog(this,a,"Warning",JOptionPane.PLAIN_MESSAGE);
 	} 
 
-	public void promotion (){
+	private void promotion (){
 		int popS = Integer.parseInt(pop_s.getSelectedItem().toString()) *100;
 		int popM = Integer.parseInt(pop_m.getSelectedItem().toString())*120;
 		int popL = Integer.parseInt(pop_l.getSelectedItem().toString())*150;
@@ -129,29 +266,18 @@ public class Payment extends JFrame {
 		int popcokeM = Integer.parseInt(popcoke_m.getSelectedItem().toString())*220;
 		int popcokeL = Integer.parseInt(popcoke_l.getSelectedItem().toString())*250;
 
-		int sum = total+popS + popM + popL + nachosM + popcokeS + popcokeM + popcokeL;
-		textField.setText( sum + "");
+		total = original+popS + popM + popL + nachosM + popcokeS + popcokeM + popcokeL;
+		textField.setText( total + "");
 	}
 
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					Payment frame = new Payment(1000);
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
 
 
-	}
 
 	/**
 	 * Create the frame.
 	 */
-	public Payment(int total) {
+	public Payment(ArrayList<Seat> bookListl,Round round) {
+		this.round = round;
 		setModalExclusionType(ModalExclusionType.APPLICATION_EXCLUDE);
 		setTitle("Payment");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -161,60 +287,23 @@ public class Payment extends JFrame {
 			@Override
 			public void mouseEntered(MouseEvent e) {
 				promotion();
+				updateTab();
 			}
 
 		});
-		this.total = total;
+		this.bookListl = bookListl;
+		for(int i = 0;i<bookListl.size();i++){
+			original += round.getSeatInEachType().get(bookListl.get(i).getPosition()[0])[bookListl.get(i).getPosition()[1]][bookListl.get(i).getPosition()[2]].getPrice();
+			//			original += bookListl.get(i).getPrice();
+		}
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
-		
-
-
-		Ticket ticket = new Ticket("movieTitle","date","seat","theater");
-
-		Time time = new Time (5400);
-		Day day = new Day(28,11,2014);
-		Image image = new Image() {
-
-			@Override
-			public int getWidth(ImageObserver observer) {
-				// TODO Auto-generated method stub
-				return 0;
-			}
-
-			@Override
-			public ImageProducer getSource() {
-				// TODO Auto-generated method stub
-				return null;
-			}
-
-			@Override
-			public Object getProperty(String name, ImageObserver observer) {
-				// TODO Auto-generated method stub
-				return null;
-			}
-
-			@Override
-			public int getHeight(ImageObserver observer) {
-				// TODO Auto-generated method stub
-				return 0;
-			}
-
-			@Override
-			public Graphics getGraphics() {
-				// TODO Auto-generated method stub
-				return null;
-			}
-		};
-
-		movie = new Movie ("title", 8.8, "summery",13,
-				image,"detail", "genres", day,
-				"director", "synopis", "language", time);
+		billID++;
 		initComponents();
 	}
 
 	private void initComponents(){
-		JButton btnCancel = new JButton("Cancel");
+		JButton btnCancel = new JButton("Clear");
 		btnCancel.setBounds(1253, 487, 230, 23);
 		btnCancel.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -535,8 +624,8 @@ public class Payment extends JFrame {
 		credit.setVisible(false);
 
 		textField = new JTextField();
-		textField.setBounds(80, 15, 86, 20);
-		textField.setText(total+"");
+		textField.setBounds(80, 15, 100, 20);
+		textField.setText(original+"");
 		textField.setColumns(10);
 		contentPane.setLayout(null);
 
@@ -549,8 +638,9 @@ public class Payment extends JFrame {
 		contentPane.add(receivetx);
 
 		receive = new JTextField();
-		receive.setBounds(80, 71, 86, 20);
+		receive.setBounds(80, 71, 100, 20);
 		receive.setColumns(10);
+		receive.setText("0");
 		contentPane.add(receive);
 
 		JLabel lblT = new JLabel("Total :");
@@ -562,34 +652,33 @@ public class Payment extends JFrame {
 		lblHowToPay.setBounds(10, 44, 92, 17);
 		lblHowToPay.setFont(new Font("Tahoma", Font.BOLD, 14));
 
-		JComboBox comboBox = new JComboBox();
-		comboBox.setBounds(80, 43, 86, 20);
-		comboBox.addMouseListener(new MouseAdapter() {
+		payBy = new JComboBox();
+		payBy.setBounds(80, 43, 100, 20);
+		payBy.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
 				clearReceive();
 			}
 		});
-		comboBox.setModel(new DefaultComboBoxModel(new String[] {"Cash", "Credit Card"}));
-		comboBox.setSelectedIndex(0);
-		comboBox.addActionListener(new ActionListener() {
+		payBy.setModel(new DefaultComboBoxModel(new String[] {"Cash", "Credit Card"}));
+		payBy.setSelectedIndex(0);
+		payBy.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				if  (comboBox.getSelectedItem().equals("Cash")){
+				if  (payBy.getSelectedItem().equals("Cash")){
 					credit.setVisible(false);
 					cash.setVisible(true);
 					receivetx.setVisible(true);
 					receive.setVisible(true);
 					okButton.setVisible(true);
-					finish.setVisible(false);
+					finishButton.setVisible(false);
 				}
-				else if (comboBox.getSelectedItem().equals("Credit Card")){
+				else if (payBy.getSelectedItem().equals("Credit Card")){
 					credit.setVisible(true);
 					cash.setVisible(false);
 					receivetx.setVisible(false);
 					receive.setVisible(false);
 					okButton.setVisible(false);
-					finish.setVisible(true);
-					receiveBill = 0;
+					finishButton.setVisible(true);
 				}
 				else 
 					;
@@ -636,7 +725,7 @@ public class Payment extends JFrame {
 		contentPane.add(textField);
 		contentPane.add(lblT);
 		contentPane.add(lblHowToPay);
-		contentPane.add(comboBox);
+		contentPane.add(payBy);
 		contentPane.add(btnCancel);
 		contentPane.add(button);
 		contentPane.add(cash);
@@ -651,16 +740,17 @@ public class Payment extends JFrame {
 		lblPromotion.setFont(new Font("Tahoma", Font.BOLD, 12));
 		contentPane.add(lblPromotion);
 
-		finish = new JButton("FINISH");
-		finish.addMouseListener(new MouseAdapter() {
+		finishButton = new JButton("FINISH");
+		finishButton.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
 				tabbedPane.setVisible(true);
+				updateTab();
 			}
 		});
-		finish.setBounds(242, 505, 89, 23);
-		finish.setVisible(false);
-		contentPane.add(finish);
+		finishButton.setBounds(242, 505, 89, 23);
+		finishButton.setVisible(false);
+		contentPane.add(finishButton);
 
 		JButton back = new JButton("< BACK");
 		back.setBounds(20, 505, 89, 23);
@@ -853,13 +943,12 @@ public class Payment extends JFrame {
 		contentPane.add(txtpnNormalPriceS);
 
 		okButton = new JButton("OK");
-		okButton.setBounds(111, 93, 55, 23);
+		okButton.setBounds(120, 93, 55, 23);
 		okButton.setFont(new Font("Tahoma", Font.BOLD, 9));
 		okButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				receiveBill = Integer.parseInt(receive.getText());
 				pay = Integer.parseInt(receive.getText());
-				int sum = pay - Integer.parseInt(textField.getText());
+				int sum = pay - total;
 				if(sum>=0){
 					if (sum/1000>=1){
 						txb1000.setText(  Integer.toString(sum/1000));
@@ -906,7 +995,7 @@ public class Payment extends JFrame {
 					else txc5.setText(  Integer.toString(0));
 
 					if (sum/2>=1){
-						txc2.setText(  Integer.toString(sum/5));
+						txc2.setText(  Integer.toString(sum/2));
 						sum = sum - (sum/2)*2;
 					}
 					else txc2.setText(  Integer.toString(0));
@@ -916,7 +1005,7 @@ public class Payment extends JFrame {
 						sum = sum - (sum/1)*1;
 					}
 					else txc1.setText(  Integer.toString(0));
-					finish.setVisible(true);
+					finishButton.setVisible(true);
 				}
 				else{
 					showDialog();
@@ -925,6 +1014,7 @@ public class Payment extends JFrame {
 			}
 		});
 		contentPane.add(okButton);
+
 
 		tabbedPane = new JTabbedPane(JTabbedPane.TOP);
 		tabbedPane.setFont(new Font("Tahoma", Font.BOLD, 11));
@@ -937,133 +1027,186 @@ public class Payment extends JFrame {
 		});
 		contentPane.add(tabbedPane);
 
-		JPanel panel = new JPanel();
+		panel = new JPanel();
 		panel.setSize(1000,1000);
 		panel.setLayout(null);
 		panel.setMaximumSize(new Dimension(270,1000));
 		panel.setMinimumSize(new Dimension(270,1000));
 		panel.setPreferredSize(new Dimension(270,1000));
-		panel.setLayout(null);
-
-		JTextPane txtpnSkeCinemaLove = new JTextPane();
-		txtpnSkeCinemaLove.setFont(new Font("Tahoma", Font.PLAIN, 24));
-		txtpnSkeCinemaLove.setOpaque(false);
-		txtpnSkeCinemaLove.setEditable(false);
-		txtpnSkeCinemaLove.setText("SKE Cinema\n"+movie.getTitle()+"\nRate"+movie.getRate()+"Theatre"+"\r\nDate\r\nTime");
-		txtpnSkeCinemaLove.setBounds(90, 94, 207, 203);
-		panel.add(txtpnSkeCinemaLove);
-
-		JLabel lblNewLabel_3 = new JLabel("");
-		lblNewLabel_3.setVerticalAlignment(SwingConstants.TOP);
-		lblNewLabel_3.setHorizontalAlignment(SwingConstants.LEFT);
-		lblNewLabel_3.setIcon(new ImageIcon(Payment.class.getResource("/images/Untitled-2.jpg")));
-		lblNewLabel_3.setBounds(52, 23, 270, 319);
-		panel.add(lblNewLabel_3);
+		panel.setLayout(new BoxLayout(panel,BoxLayout.Y_AXIS));
+		updateTicket();
 		
-//		
-//		JLabel lblNewLabel_4 = lblNewLabel_3;
-//		for(int i = 0;i<10;i++){
-//			panel.add(lblNewLabel_4);
-//			lblNewLabel_4.setBounds(52, (319)*(i)+23, 270, 319);
-//			
-//		}
-//		
-		
-
 		JScrollPane scrollPane = new JScrollPane(panel);
+
+		
+
+
 		scrollPane.setSize(300,300);
 		scrollPane.setMaximumSize(new Dimension(300,300));
 		scrollPane.setPreferredSize(new Dimension(300,300));
 		scrollPane.setMinimumSize(new Dimension(300,300));
-		scrollPane.remove(1);
+
 		tabbedPane.addTab("     Ticket     ", null, scrollPane, null);
-		
-		
-		
+
+
+
 		JPanel panel2 = new JPanel();
+		panel2.setForeground(Color.WHITE);
 		panel2.setSize(1000,1000);
 		panel2.setMaximumSize(new Dimension(270,1000));
 		panel2.setMinimumSize(new Dimension(270,1000));
 		panel2.setPreferredSize(new Dimension(270,1000));
 		panel2.setLayout(null);
-		
+
 		JScrollPane scrollPane_1 = new JScrollPane(panel2);
 		panel2.setLayout(null);
-		
-		JLabel lblAaaa = new JLabel("aaaa");
-		lblAaaa.setBounds(68, 327, 68, 14);
-		panel2.add(lblAaaa);
-		
-		JLabel lblTotaljhhh = new JLabel("totaljhhh");
-		lblTotaljhhh.setHorizontalAlignment(SwingConstants.TRAILING);
-		lblTotaljhhh.setBounds(90, 371, 175, 14);
-		panel2.add(lblTotaljhhh);
-		
-		JLabel label_5 = new JLabel("jhhhhhh");
-		label_5.setHorizontalAlignment(SwingConstants.TRAILING);
-		label_5.setBounds(90, 415, 175, 14);
-		panel2.add(label_5);
-		
-		JLabel lblReceivejhhh = new JLabel("receivejhhh");
-		lblReceivejhhh.setHorizontalAlignment(SwingConstants.TRAILING);
-		lblReceivejhhh.setBounds(90, 385, 175, 14);
-		panel2.add(lblReceivejhhh);
-		
-		JLabel lblJh = new JLabel("vat7jhh");
-		lblJh.setHorizontalAlignment(SwingConstants.TRAILING);
-		lblJh.setBounds(90, 461, 175, 14);
-		panel2.add(lblJh);
-		
+
+		BillNumber = new JLabel(billID+"");
+		BillNumber.setFont(new Font("Tahoma", Font.PLAIN, 12));
+		BillNumber.setBounds(110, 501, 175, 14);
+		panel2.add(BillNumber);
+
+		theatertx = new JLabel("theatre");
+		theatertx.setBounds(89, 245, 88, 14);
+		panel2.add(theatertx);
+
+		BillSeatNormaltx = new JLabel("1");
+		BillSeatNormaltx.setBounds(159, 277, 46, 14);
+		panel2.add(BillSeatNormaltx);
+
+		membertx = new JLabel("Member ID :");
+		membertx.setBounds(30, 156, 211, 14);
+		panel2.add(membertx);
+
+		BillPopcokeLtx = new JLabel("25");
+		BillPopcokeLtx.setBounds(281, 309, 28, 14);
+		panel2.add(BillPopcokeLtx);
+
+		BillPopcokeMtx = new JLabel("25");
+		BillPopcokeMtx.setBounds(281, 293, 28, 14);
+		panel2.add(BillPopcokeMtx);
+
+		BillPopcokeStx = new JLabel("25");
+		BillPopcokeStx.setBounds(281, 277, 28, 14);
+		panel2.add(BillPopcokeStx);
+
+		BillNachostx = new JLabel("25");
+		BillNachostx.setBounds(254, 245, 28, 14);
+		panel2.add(BillNachostx);
+
+		BillPopLtx = new JLabel("25");
+		BillPopLtx.setBounds(336, 229, 28, 14);
+		panel2.add(BillPopLtx);
+
+		BillPopMtx = new JLabel("25");
+		BillPopMtx.setBounds(303, 229, 28, 14);
+		panel2.add(BillPopMtx);
+
+		BillPopStx = new JLabel("25");
+		BillPopStx.setBounds(268, 229, 28, 14);
+		panel2.add(BillPopStx);
+
+		amounttx = new JLabel("amount");
+		amounttx.setBounds(88, 261, 88, 14);
+		panel2.add(amounttx);
+
+		movietx = new JLabel("movieeeee");
+		movietx.setBounds(79, 213, 246, 14);
+		panel2.add(movietx);
+
+		BillTotal = new JLabel(total+"");
+		BillTotal.setHorizontalAlignment(SwingConstants.TRAILING);
+		BillTotal.setBounds(90, 371, 175, 14);
+		panel2.add(BillTotal);
+
+		BillReturn = new JLabel(pay-total+"");
+		if (payBy.getSelectedItem().equals("Cash"))
+			if (payBy.getSelectedItem().equals("Cash"))
+				BillReturn.setText(pay-total+"");
+			else
+				BillReturn.setText(total-total+"");	
+		BillReturn.setHorizontalAlignment(SwingConstants.TRAILING);
+		BillReturn.setBounds(90, 421, 175, 14);
+		panel2.add(BillReturn);
+
+		BillReceive = new JLabel(pay+"");
+		if (payBy.getSelectedItem().equals("Cash"))
+			BillReceive.setText(pay+"");
+		else
+			BillReceive.setText(total+"");	
+		BillReceive.setHorizontalAlignment(SwingConstants.TRAILING);
+		BillReceive.setBounds(90, 389, 175, 14);
+		panel2.add(BillReceive);
+
+		BillVat = new JLabel(String.format("%.2f",total*0.07));
+		BillVat.setHorizontalAlignment(SwingConstants.TRAILING);
+		BillVat.setBounds(90, 470, 175, 14);
+		panel2.add(BillVat);
+
 		JLabel label_3 = new JLabel("Baht");
 		label_3.setFont(new Font("Tahoma", Font.PLAIN, 11));
-		label_3.setBounds(292, 415, 36, 14);
+		label_3.setBounds(292, 421, 36, 14);
 		panel2.add(label_3);
-		
+
 		JLabel label_2 = new JLabel("Baht");
 		label_2.setFont(new Font("Tahoma", Font.PLAIN, 11));
-		label_2.setBounds(292, 461, 36, 14);
+		label_2.setBounds(292, 470, 36, 14);
 		panel2.add(label_2);
-		
+
 		JLabel label_1 = new JLabel("Baht");
 		label_1.setFont(new Font("Tahoma", Font.PLAIN, 11));
-		label_1.setBounds(292, 385, 36, 14);
+		label_1.setBounds(292, 389, 36, 14);
 		panel2.add(label_1);
-		
+
 		JLabel lblBaht = new JLabel("Baht");
 		lblBaht.setFont(new Font("Tahoma", Font.PLAIN, 11));
 		lblBaht.setBounds(292, 371, 36, 14);
 		panel2.add(lblBaht);
-		
+
 		JLabel label = new JLabel("");
 		label.setHorizontalAlignment(SwingConstants.CENTER);
 		label.setIcon(new ImageIcon(Payment.class.getResource("/images/billqrcode55.png")));
 		label.setBounds(10, 67, 353, 70);
 		panel2.add(label);
-		
+
 		JLabel lblNewLabel_4 = new JLabel("SKE Cinema\r\n");
 		lblNewLabel_4.setFont(new Font("Tahoma", Font.BOLD, 16));
 		lblNewLabel_4.setHorizontalAlignment(SwingConstants.CENTER);
 		lblNewLabel_4.setBounds(10, 33, 353, 50);
 		panel2.add(lblNewLabel_4);
-		
+
 		int sum;
-		if(comboBox.getSelectedItem().equals("Cash"))
-				sum = 0;
-		else sum = total - receiveBill;
+		if(payBy.getSelectedItem().equals("Cash"))
+			sum = 0;
+		else sum = total - Integer.parseInt(receive.getText());
+
+		BillSeatHoneymoontx = new JLabel("2");
+		BillSeatHoneymoontx.setBounds(185, 293, 46, 14);
+		panel2.add(BillSeatHoneymoontx);
+
+		BillseatOperatx = new JLabel("3");
+		BillseatOperatx.setBounds(184, 309, 46, 14);
+		panel2.add(BillseatOperatx);
 		JTextPane txtpnYYY = new JTextPane();
-		txtpnYYY.setText("\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n    -------------------------------------------------------------------------------   \r\n\r\n        :: Movie Ticket ::\r\n                   \r\n\t Name :\r\n\t Theatre :      (\u0E1A\u0E2D\u0E01 Type)\r\n\t Amount :\r\n\t Seat Class    x1\r\n\t\r\n\r\n\r\n    -------------------------------------------------------------------------------  \r\n\r\n\r\n        Total                                                                       \r\n        Receive                                                                \r\n\r\n        Return                                                                \r\n\r\n\r\n        VAT 7%                                                              \r\n\r\n");
+		txtpnYYY.setOpaque(false);
+		txtpnYYY.setText("\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n    -------------------------------------------------------------------------------   \r\n\r\n     :: Movie Ticket ::                                :: Promotion  ::\r\n        Name :\r\n                                                              Popcorn  S x      M x      L x\r\n        Theatre :                                      Nachos  x\r\n        Amount :                                      Popcorn & Coke set \r\n        Seat Class : Normal  x                    Size      S  x\r\n                               Honey Moon  x                         M  x\r\n                               Opera Chair  x                          L  x\r\n    -------------------------------------------------------------------------------  \r\n\r\n\r\n        Total                                                                       \r\n        Receive                                                                \r\n\r\n        Return                                                                \r\n\r\n\r\n        VAT 7%\r\n\r\n        Bill number :\r\n");
 		txtpnYYY.setMaximumSize(new Dimension(270,1000));
 		txtpnYYY.setMinimumSize(new Dimension(270,1000));
 		txtpnYYY.setPreferredSize(new Dimension(270,1000));
 		txtpnYYY.setBounds(10, 33, 353,480);
 		panel2.add(txtpnYYY);
-		
+
 		scrollPane_1.setPreferredSize(new Dimension(300, 300));
 		scrollPane_1.setMinimumSize(new Dimension(300, 300));
 		scrollPane_1.setMaximumSize(new Dimension(300, 300));
 
 		tabbedPane.setVisible(false);
-		tabbedPane.addTab("      Bill      ", null, scrollPane_1, null);
+		tabbedPane.addTab("     Receipt     ", null, scrollPane_1, null);
 
+	}
+	@Override
+	public void run() {
+		// TODO Auto-generated method stub
+		setVisible(true);
 	}
 }
